@@ -3,65 +3,127 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>محاسبه نور و توان لامپ</title>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Noorban | محاسبه نور فضا</title>
+  <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Vazir', sans-serif;
+    }
     body {
-      font-family: 'Vazirmatn', sans-serif;
-      background-color: #f4f4f4;
+      background-color: #111215;
+      color: #f0f0f0;
+      margin: 0;
+      padding: 0;
       direction: rtl;
-      background-image: url('https://i.postimg.cc/yNfcjT6Y/architecture-lines.png');
-      background-repeat: repeat;
-      background-size: contain;
     }
-    .neon-bulb {
-      width: 100px;
-      height: 150px;
-      background: radial-gradient(circle at center, #fff 30%, #fc0 60%, #f90 100%);
-      border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
-      box-shadow: 0 0 50px rgba(255, 200, 0, 0.8);
-      transition: all 0.3s ease;
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 40px 20px;
     }
-    input[type=range]::-webkit-slider-thumb {
-      background: #facc15;
+    h1, h2 {
+      text-align: center;
+      color: #ffd369;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.3);
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #ffd369;
+      border: none;
+      font-size: 16px;
+      color: #111;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #ffcb00;
+    }
+    #result, #lampResult {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      line-height: 1.8;
+    }
+    .lamp-container {
+      text-align: center;
+      margin-top: 40px;
+    }
+    .lamp-img {
+      width: 80px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 10px #ffd369);
+    }
+    input[type=range] {
+      width: 100%;
+    }
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      font-size: 13px;
+      color: #888;
     }
   </style>
 </head>
-<body class="p-6">
-  <div class="max-w-3xl mx-auto space-y-12">
-    <h1 class="text-3xl font-bold text-center text-gray-800">💡 محاسبه نور فضا و توان مناسب لامپ</h1>
+<body>
+  <div class="container">
+    <h1>💡 نوربان</h1>
+    <h2>محاسبه نور محیط و توان لامپ مناسب</h2>
 
-    <div class="bg-white rounded-2xl shadow-lg p-6">
-      <h2 class="text-xl font-semibold mb-4">🔸 محاسبه نور مورد نیاز فضا</h2>
-      <div class="grid grid-cols-2 gap-4">
-        <label>طول فضا (متر):<input type="number" id="length" class="input" /></label>
-        <label>عرض فضا (متر):<input type="number" id="width" class="input" /></label>
-        <label>تعداد پنجره‌ها:<input type="number" id="windows" class="input" /></label>
-        <label>کاربری فضا:
-          <select id="usage" class="input">
-            <option value="خانگی">خانگی</option>
-            <option value="اداری">اداری</option>
-            <option value="تجاری">تجاری</option>
-            <option value="صنعتی">صنعتی</option>
-          </select>
-        </label>
-      </div>
-      <button onclick="calculateLighting()" class="mt-4 px-4 py-2 bg-yellow-400 rounded-xl font-bold hover:bg-yellow-500">محاسبه نور</button>
-      <div id="result" class="mt-4 text-lg font-semibold text-gray-700"></div>
+    <div class="card">
+      <label>طول فضا (متر): <input type="number" id="length"></label>
+      <label>عرض فضا (متر): <input type="number" id="width"></label>
+      <label>تعداد پنجره‌ها: <input type="number" id="windows"></label>
+      <label>کاربری فضا:
+        <select id="usage">
+          <option value="خانگی">خانگی</option>
+          <option value="اداری">اداری</option>
+          <option value="تجاری">تجاری</option>
+          <option value="صنعتی">صنعتی</option>
+        </select>
+      </label>
+      <button onclick="calculateLighting()">محاسبه نور مورد نیاز</button>
+      <div id="result"></div>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-lg p-6">
-      <h2 class="text-xl font-semibold mb-4">🔸 تعیین متراژ مناسب برای توان لامپ</h2>
-      <div class="flex items-center space-x-6">
-        <div class="flex-grow">
-          <label class="block mb-2">میزان نور (لومن): <span id="lampValue">100</span> لومن</label>
-          <input type="range" id="lampLumen" min="100" max="10000" step="50" oninput="updateLampOutput()" class="w-full">
-        </div>
-        <div id="bulb" class="neon-bulb"></div>
+    <div class="card">
+      <div class="lamp-container">
+        <img src="https://cdn-icons-png.flaticon.com/512/427/427735.png" alt="لامپ" class="lamp-img" id="lampBulb">
       </div>
-      <div id="lampResult" class="mt-4 text-lg font-semibold text-gray-700"></div>
+      <label>تنظیم شدت نور لامپ (لومن):
+        <input type="range" id="lampLumen" min="100" max="10000" step="50" oninput="updateLampOutput()">
+        <span id="lampValue">100</span> لومن
+      </label>
+      <div id="lampResult"></div>
     </div>
+
+    <footer>
+      &copy; 2025 — Noorban / Designed by <strong>smilene</strong> — All rights reserved.
+    </footer>
   </div>
 
   <script>
@@ -72,7 +134,7 @@
       const usage = document.getElementById("usage").value;
 
       if (isNaN(length) || isNaN(width) || isNaN(windows)) {
-        document.getElementById("result").innerText = "لطفاً تمام گزینه‌ها را وارد کنید";
+        document.getElementById("result").innerText = "لطفاً تمام مقادیر را وارد کنید";
         return;
       }
 
@@ -92,14 +154,17 @@
       else if (totalLumen < 3000) suggestion = "ترکیبی از مهتابی و آفتابی با توان ۲۰ تا ۳۰ وات مناسب است";
       else suggestion = "از لامپ‌های صنعتی یا چند مهتابی قوی استفاده شود (۵۰ وات به بالا)";
 
-      document.getElementById("result").innerText = `فضا به ${totalLumen.toFixed(0)} لومن نور نیاز دارد. \nپیشنهاد: ${suggestion}`;
+      document.getElementById("result").innerText =
+        `فضا به ${totalLumen.toFixed(0)} لومن نور نیاز دارد. \nپیشنهاد: ${suggestion}`;
     }
 
     function updateLampOutput() {
       const lumen = parseInt(document.getElementById("lampLumen").value);
       document.getElementById("lampValue").innerText = lumen;
+      const lamp = document.getElementById("lampBulb");
 
       const area = lumen / 150;
+
       let usage;
       if (area < 5) usage = "نور کم - مناسب چراغ خواب یا فضای خیلی کوچک";
       else if (area < 15) usage = "مناسب اتاق خواب کوچک یا سرویس بهداشتی";
@@ -107,17 +172,13 @@
       else if (area < 100) usage = "مناسب مغازه یا فروشگاه کوچک";
       else usage = "مناسب سالن یا کارگاه صنعتی بزرگ";
 
-      document.getElementById("lampResult").innerText = `این میزان نور مناسب فضایی حدود ${area.toFixed(1)} متر مربع است. \n${usage}`;
+      document.getElementById("lampResult").innerText =
+        `این میزان نور مناسب فضایی حدود ${area.toFixed(1)} متر مربع است.\n${usage}`;
 
-      const bulb = document.getElementById("bulb");
-      bulb.style.boxShadow = `0 0 ${lumen / 20}px rgba(255, 200, 0, 0.8)`;
-      bulb.style.background = `radial-gradient(circle at center, #fff ${Math.min(30 + lumen / 500, 60)}%, #fc0 ${Math.min(60 + lumen / 400, 90)}%, #f90 100%)`;
+      lamp.style.filter = `drop-shadow(0 0 ${Math.max(5, lumen / 200)}px #ffd369)`;
     }
 
     updateLampOutput();
   </script>
-  <footer style="text-align:center; margin-top:40px; font-size:14px; color:#888;">
-  &copy; 2025 Smilene.ir. All rights reserved. Crafted with passion and code.
-</footer>
 </body>
 </html>
