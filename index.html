@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>محاسبه نور فضا + محاسبه توان لامپ</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; direction: rtl; }
+    label, input, select { display: block; margin-bottom: 10px; font-size: 16px; }
+    .section { background: #fff; padding: 20px; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+    #result, #lampResult { margin-top: 15px; font-weight: bold; font-size: 18px; }
+    input[type=range] { width: 100%; }
+  </style>
+</head>
+<body>
+  <h1>💡 محاسبه نور فضا و توان مناسب لامپ</h1>
+
+  <div class="section">
+    <h2>🔸 محاسبه نور مورد نیاز فضا</h2>
+    <label>طول فضا (متر): <input type="number" id="length"></label>
+    <label>عرض فضا (متر): <input type="number" id="width"></label>
+    <label>تعداد پنجره‌ها: <input type="number" id="windows"></label>
+    <label>کاربری فضا:
+      <select id="usage">
+        <option value="خانگی">خانگی</option>
+        <option value="اداری">اداری</option>
+        <option value="تجاری">تجاری</option>
+        <option value="صنعتی">صنعتی</option>
+      </select>
+    </label>
+    <button onclick="calculateLighting()">محاسبه نور</button>
+    <div id="result"></div>
+  </div>
+
+  <div class="section">
+    <h2>🔸 تعیین متراژ مناسب برای توان لامپ</h2>
+    <label>میزان نور (لومن):
+      <input type="range" id="lampLumen" min="100" max="10000" step="50" oninput="updateLampOutput()">
+      <span id="lampValue">100</span> لومن
+    </label>
+    <div id="lampResult"></div>
+  </div>
+
+  <script>
+    function calculateLighting() {
+      const length = parseFloat(document.getElementById("length").value);
+      const width = parseFloat(document.getElementById("width").value);
+      const windows = parseInt(document.getElementById("windows").value);
+      const usage = document.getElementById("usage").value;
+
+      if (isNaN(length) || isNaN(width) || isNaN(windows)) {
+        document.getElementById("result").innerText = "لطفاً تمام مقادیر را وارد کنید";
+        return;
+      }
+
+      const area = length * width;
+      let lux;
+      if (usage === "خانگی") lux = 150;
+      else if (usage === "اداری") lux = 300;
+      else if (usage === "تجاری") lux = 500;
+      else if (usage === "صنعتی") lux = 700;
+
+      const naturalLight = windows * 200; // هر پنجره حدوداً ۲۰۰ لومن نور می‌دهد
+      const totalLumenNeeded = area * lux - naturalLight;
+      const totalLumen = Math.max(totalLumenNeeded, 0);
+
+      let suggestion;
+      if (totalLumen < 1000) suggestion = "لامپ آفتابی ۱۰ وات کافی است";
+      else if (totalLumen < 3000) suggestion = "ترکیبی از مهتابی و آفتابی با توان ۲۰ تا ۳۰ وات مناسب است";
+      else suggestion = "از لامپ‌های صنعتی یا چند مهتابی قوی استفاده شود (۵۰ وات به بالا)";
+
+      document.getElementById("result").innerText =
+        `فضا به ${totalLumen.toFixed(0)} لومن نور نیاز دارد. \nپیشنهاد: ${suggestion}`;
+    }
+
+    function updateLampOutput() {
+      const lumen = parseInt(document.getElementById("lampLumen").value);
+      document.getElementById("lampValue").innerText = lumen;
+
+      // فرض: فضای خانگی نیاز به 150 لوکس داره، یعنی 150 لومن بر متر مربع
+      const area = lumen / 150;
+
+      let usage;
+      if (area < 5) usage = "نور کم - مناسب چراغ خواب یا فضای خیلی کوچک";
+      else if (area < 15) usage = "مناسب اتاق خواب کوچک یا سرویس بهداشتی";
+      else if (area < 30) usage = "مناسب اتاق نشیمن یا دفتر کار";
+      else if (area < 100) usage = "مناسب مغازه یا فروشگاه کوچک";
+      else usage = "مناسب سالن یا کارگاه صنعتی بزرگ";
+
+      document.getElementById("lampResult").innerText =
+        `این میزان نور مناسب فضایی حدود ${area.toFixed(1)} متر مربع است. \n${usage}`;
+    }
+
+    // اجرای اولیه
+    updateLampOutput();
+  </script>
+</body>
+</html>
